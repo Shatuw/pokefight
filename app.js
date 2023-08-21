@@ -1,6 +1,10 @@
 import express from "express";
-import pokeDex from "./pokedex.json" assert {type: "json"}
+//import pokeDex from "./pokedex.json" //assert {type: "json"}
 import cors from "cors";
+
+import { readFile } from 'node:fs/promises';
+const fileUrl = new URL("./pokedex.json", import.meta.url);
+const parsedPackageJSON = JSON.parse(await readFile(fileUrl, 'utf8'));
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -12,7 +16,7 @@ app.all("/", (req, res, next) => {
 });
 
 app.get("/pokemon", (req, res) => {
-    res.json(pokeDex); //send the whole pokedex with its hundreds of entries
+    res.json(parsedPackageJSON); //send the whole pokedex with its hundreds of entries
 });
 
 app.get("/pokemon/:id", (req, res) => {
